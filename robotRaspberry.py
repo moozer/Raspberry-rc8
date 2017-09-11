@@ -8,7 +8,7 @@ class robotRaspberry():
 #	                [(-1.0,  0.0), ( 1.0, -1.0), (1.0, 0.0)] ]
 
     class motor():
-        _motorDirection = { 'forward': (0, 1), 'backwards': (1,0) }
+        _motorDirection = { 'forward': (1, 0), 'backwards': (0, 1) }
         def __init__( self, pinConfig, pwm_freq ):
             self._pinConfig = pinConfig
             self._pwm_freq = pwm_freq
