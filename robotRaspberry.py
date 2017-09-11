@@ -67,32 +67,6 @@ class robotRaspberry():
         self._updateSpeed()
 
 
-#    def _setDirectionPins( self, motor, pins ):
-	
-
-    # def updateDirection( self, x, y ):
-    # 	int_x = int( round( x, 0 ) )
-    # 	int_y = int( round( y, 0 ) )
-    # 	print "input was %f, %f - rounding to %d, %d - (A,B) = %s"%( x, y, int_x, int_y, self._directionMatrix[int_x+1][int_y+1] )
-    #     self._setMotorA( self._speed, self._directionMatrix[int_x+1][int_y+1][0] )
-    #     self._setMotorB( self._speed, self._directionMatrix[int_x+1][int_y+1][1] )
-    #
-    def _setMotorA( self, speed, weight ):
-        if weight == 0:
-            self._motorA.stop()
-        else:
-            GPIO.output( self._pinConfigA["dir_A"], 0 if weight > 0 else 1 )
-            GPIO.output( self._pinConfigA["dir_B"], 1 if weight > 0 else 0 )
-            self._motorA.start( speed*math.fabs( weight ) )
-
-    def _setMotorB( self, speed, weight ):
-        if weight == 0:
-            self._motorB.stop()
-        else:
-            GPIO.output( self._pinConfigB["dir_A"], 0 if weight > 0 else 1 )
-            GPIO.output( self._pinConfigB["dir_B"], 1 if weight > 0 else 0 )
-            self._motorB.start( speed*math.fabs( weight ))
-
     def cleanup( self ):
         self._motorA.stop()
         self._motorB.stop()
@@ -110,6 +84,6 @@ if __name__ == "__main__":
     print pinConfig
 
     robot = robotRaspberry( pinConfig, motorConfig )
-    gp = rcGamepad( robot )
+    gp = rcGamepad( robot, speed=70, turnSpeed=30 )
     gp.printJoystickInfo()
     gp.runLoop()
