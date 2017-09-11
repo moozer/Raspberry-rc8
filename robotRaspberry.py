@@ -36,8 +36,12 @@ class robotRaspberry():
         self._updateSpeed()
 
     def _updateSpeed( self ):
-        self._motorA.start( speed + self._turnSpeed[0] )
-        self._motorB.start( speed + self._turnSpeed[1] )
+	print "update speed"
+	print "- motor A: base %0.1f, turn %0.1f"%( self._speed, self._turnSpeed[0] )
+	print "- motor B: base %0.1f, turn %0.1f"%( self._speed, self._turnSpeed[1] )
+
+        self._motorA.start( self._speed + self._turnSpeed[0] )
+        self._motorB.start( self._speed + self._turnSpeed[1] )
         return
 
     def setDirection( self, turnSpeed ):
