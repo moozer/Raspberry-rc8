@@ -2,7 +2,7 @@ from rcGamepad import rcGamepad
 import RPi.GPIO as GPIO
 import math
 
-class raspBot():
+class robotRaspberry():
     _directionMatrix = [[( 0.0, -1.0), (-1.0,  1.0), (0.0, 1.0)],
         	        [( 1.0,  1.0), ( 0.0,  0.0), (-1.0, -1.0)],
 	                [(-1.0,  0.0), ( 1.0, -1.0), (1.0, 0.0)] ]
@@ -17,8 +17,8 @@ class raspBot():
         self._pinConfigA = pinConfig["motorA"]
         self._pinConfigB = pinConfig["motorB"]
 
-	self._motorA = self._setupMotorPins( self._pinConfigA )
-	self._motorB = self._setupMotorPins( self._pinConfigB )
+    	self._motorA = self._setupMotorPins( self._pinConfigA )
+    	self._motorB = self._setupMotorPins( self._pinConfigB )
 
         self._speed = self._motorConfig["speed"]
 
@@ -34,9 +34,9 @@ class raspBot():
         return
 
     def updateDirection( self, x, y ):
-	int_x = int( round( x, 0 ) )
-	int_y = int( round( y, 0 ) )
-	print "input was %f, %f - rounding to %d, %d - (A,B) = %s"%( x, y, int_x, int_y, self._directionMatrix[int_x+1][int_y+1] )
+    	int_x = int( round( x, 0 ) )
+    	int_y = int( round( y, 0 ) )
+    	print "input was %f, %f - rounding to %d, %d - (A,B) = %s"%( x, y, int_x, int_y, self._directionMatrix[int_x+1][int_y+1] )
         self._setMotorA( self._speed, self._directionMatrix[int_x+1][int_y+1][0] )
         self._setMotorB( self._speed, self._directionMatrix[int_x+1][int_y+1][1] )
 
