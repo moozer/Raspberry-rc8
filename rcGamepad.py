@@ -40,16 +40,11 @@ class rcGamepad():
         print "- Number of hats:", self._joystick.get_numhats()
 
     def _handleAxis( self, event ):
-        axisUpDown = 0
-        axisLeftRight = 1
+        axisUpDown = 1
+        axisLeftRight = 0
 
-        # print self._joystick.get_axis( axisLeftRight )
-        # print self._joystick.get_axis( axisUpDown )
-
-        self._robot.setSpeed( self._joystick.get_axis( axisUpDown ) * self._speed )
+        self._robot.setSpeed( self._joystick.get_axis( axisUpDown ) * self._speed * -1)
         self._robot.setDirection( self._joystick.get_axis( axisLeftRight ) * self._turnSpeed )
-        # self._robot.updateDirection(  self._joystick.get_axis( axisUpDown ),
-        #                               self._joystick.get_axis( axisLeftRight ) )
 
     def _doQuitButton( self, event ):
         if event.type == pygame.JOYBUTTONUP:
