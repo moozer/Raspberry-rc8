@@ -56,6 +56,21 @@ class rcGamepad():
     def _handleButtons( self, event ):
         self._buttonHandlers[event.button](event)
 
+    def _processEvents( self ):
+        # EVENT PROCESSING STEP
+        for event in pygame.event.get(): # User did something
+            if event.joy != self._gpNo:
+                continue
+
+            if event.type == pygame.QUIT: # If user clicked close
+                done=True # Flag that we are done so we exit this loop
+
+            if event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
+                self._handleButtons( event )
+
+            if event.type == pygame.JOYAXISMOTION:
+                self._handleAxis( event )
+
     def runLoop( self ):
         pygame.init()
 
@@ -66,19 +81,7 @@ class rcGamepad():
 
         # -------- Main Program Loop -----------
         while not self._endLoop:
-            # EVENT PROCESSING STEP
-            for event in pygame.event.get(): # User did something
-                if event.joy != self._gpNo:
-                    continue
-
-                if event.type == pygame.QUIT: # If user clicked close
-                    done=True # Flag that we are done so we exit this loop
-
-                if event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
-                    self._handleButtons( event )
-
-                if event.type == pygame.JOYAXISMOTION:
-                    self._handleAxis( event )
+            self._processEvents()
 
             # Limit to 20 frames per second
             clock.tick(20)
