@@ -20,7 +20,8 @@ class robotRaspberry():
     	self._motorA = self._setupMotorPins( self._pinConfigA )
     	self._motorB = self._setupMotorPins( self._pinConfigB )
 
-        self._speed = self._motorConfig["speed"]
+        self._speed = 0
+        self._turnSpeed = (0,0)
 
     def _setupMotorPins( self, config ):
         GPIO.setup( config["dir_A"], GPIO.OUT )
@@ -28,18 +29,29 @@ class robotRaspberry():
         GPIO.setup( config["pwm"], GPIO.OUT )
         return GPIO.PWM( config["pwm"], self._motorConfig["freq"] )
 
-
     def setSpeed( self, speed ):
-        print "speed", speed
+        ''' "speed" is actually the pwm duty cycle
+        '''
+        self._speed = speed
+        self._updateSpeed()
+
+    def _updateSpeed( self ):
+        self._motorA.start( speed + self._turnSpeed[0] )
+        self._motorB.start( speed + self._turnSpeed[1] )
         return
 
-    def updateDirection( self, x, y ):
-    	int_x = int( round( x, 0 ) )
-    	int_y = int( round( y, 0 ) )
-    	print "input was %f, %f - rounding to %d, %d - (A,B) = %s"%( x, y, int_x, int_y, self._directionMatrix[int_x+1][int_y+1] )
-        self._setMotorA( self._speed, self._directionMatrix[int_x+1][int_y+1][0] )
-        self._setMotorB( self._speed, self._directionMatrix[int_x+1][int_y+1][1] )
+    def setDirection( self, turnSpeed ):
+        self._turnSpeed = (turnSpeed, -1*turnSpeed)
+        self._updateSpeed()
 
+
+    # def updateDirection( self, x, y ):
+    # 	int_x = int( round( x, 0 ) )
+    # 	int_y = int( round( y, 0 ) )
+    # 	print "input was %f, %f - rounding to %d, %d - (A,B) = %s"%( x, y, int_x, int_y, self._directionMatrix[int_x+1][int_y+1] )
+    #     self._setMotorA( self._speed, self._directionMatrix[int_x+1][int_y+1][0] )
+    #     self._setMotorB( self._speed, self._directionMatrix[int_x+1][int_y+1][1] )
+    #
     def _setMotorA( self, speed, weight ):
         if weight == 0:
             self._motorA.stop()
@@ -64,7 +76,7 @@ class robotRaspberry():
 
 
 if __name__ == "__main__":
-    motorConfig = { "freq": 50, "speed": 65}
+    motorConfig = { "freq": 50 }
     pinConfig =   { "motorA": {"dir_A": 14, "dir_B": 15, "pwm": 18 },
                     "motorB": {"dir_A": 3,  "dir_B": 2,  "pwm": 4 }}
 
