@@ -8,7 +8,7 @@ import pygame
 from rc8 import mockRobot
 
 class rcGamepad():
-    def __init__( self, robot, gamepadNo = 0 ):
+    def __init__( self, robot, speed = 50, turnSpeed = 25, gamepadNo = 0 ):
         self._buttonHandlers = (
             self._doNothing, self._doNothing,
             self._doNothing, self._doNothing,
@@ -23,6 +23,8 @@ class rcGamepad():
         self._gpNo = gamepadNo;
         self._initJoystick( self._gpNo )
         self._robot = robot
+        self._speed = speed
+        self._turnSpeed = turnSpeed
 
     def _initJoystick( self, gpNo ):
         self._joystick = pygame.joystick.Joystick( gpNo )
@@ -41,8 +43,13 @@ class rcGamepad():
         axisUpDown = 0
         axisLeftRight = 1
 
-        self._robot.updateDirection(  self._joystick.get_axis( axisUpDown ),
-                                      self._joystick.get_axis( axisLeftRight ) )
+        # print self._joystick.get_axis( axisLeftRight )
+        # print self._joystick.get_axis( axisUpDown )
+
+        self._robot.setSpeed( self._joystick.get_axis( axisUpDown ) * self._speed )
+        self._robot.setDirection( self._joystick.get_axis( axisLeftRight ) * self._turnSpeed )
+        # self._robot.updateDirection(  self._joystick.get_axis( axisUpDown ),
+        #                               self._joystick.get_axis( axisLeftRight ) )
 
     def _doQuitButton( self, event ):
         if event.type == pygame.JOYBUTTONUP:
