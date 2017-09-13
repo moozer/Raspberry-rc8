@@ -9,7 +9,9 @@ class raspRobot():
 
     
   def setSpeed( self, speed ):
-    print "speed", speed
+    print "setting speed", speed
+    self._motorA.start( speed )
+    self._motorB.start( speed )    
     return
 
   def setDirection( self, speedOffset):
