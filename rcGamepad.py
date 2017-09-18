@@ -6,14 +6,15 @@
 
 import pygame
 from rc8 import mockRobot
+import time
 
 class rcGamepad():
     def __init__( self, robot, speed = 50, turnSpeed = 25, gamepadNo = 0 ):
         self._buttonHandlers = (
+            self._doCircleRight, self._doCircleLeft,
             self._doNothing, self._doNothing,
-            self._doNothing, self._doNothing,
-            self._doNothing, self._doNothing,
-            self._doNothing, self._doNothing,
+            self._goFast, self._doNothing,
+            self._goSlow, self._doNothing,
             self._doNothing, self._doQuitButton )
 
         pygame.joystick.init()
@@ -24,6 +25,7 @@ class rcGamepad():
         self._initJoystick( self._gpNo )
         self._robot = robot
         self._speed = speed
+	self._defaultspeed = speed
         self._turnSpeed = turnSpeed
 
     def _initJoystick( self, gpNo ):
@@ -43,7 +45,15 @@ class rcGamepad():
         axisUpDown = 1
         axisLeftRight = 0
 
-        self._robot.setSpeed( self._joystick.get_axis( axisUpDown ) * self._speed * -1)
+	speed = self._joystick.get_axis( axisUpDown ) * self._speed * -1
+	if speed > 100:
+		adj_speed = 100
+	elif speed < -100:
+		adj_speed = -100
+	else:
+		adj_speed = speed
+
+        self._robot.setSpeed( adj_speed )
         self._robot.setDirection( self._joystick.get_axis( axisLeftRight ) * self._turnSpeed )
 
     def _doQuitButton( self, event ):
@@ -51,9 +61,48 @@ class rcGamepad():
             self._endLoop = True
             print "Quit button - shutting down"
 
+    def _goSlow( self, event ):
+	if event.type == pygame.JOYBUTTONDOWN:
+	        print "Button %d %s - go slow"%(event.button, "up" if event.type == pygame.JOYBUTTONUP else "down")
+		self._speed = self._defaultspeed/2
+	else:
+	        print "Button %d %s - go normal"%(event.button, "up" if event.type == pygame.JOYBUTTONUP else "down")
+		self._speed = self._defaultspeed
+	
+    def _goFast( self, event ):
+	if event.type == pygame.JOYBUTTONDOWN:
+	        print "Button %d %s - go fast"%(event.button, "up" if event.type == pygame.JOYBUTTONUP else "down")
+		self._speed = int(self._defaultspeed*1.5)
+	else:
+	        print "Button %d %s - go normal"%(event.button, "up" if event.type == pygame.JOYBUTTONUP else "down")
+		self._speed = self._defaultspeed
+	
+
     def _doNothing( self, event ):
         print "Button %d %s - unused"%(event.button, "up" if event.type == pygame.JOYBUTTONUP else "down")
         return
+
+    def _doCircleRight( self, event ):
+        print "Button %d %s - doing circle right"%(event.button, "up" if event.type == pygame.JOYBUTTONUP else "down")
+	if event.type == pygame.JOYBUTTONDOWN:
+	        self._robot.setSpeed( 0 )
+        	self._robot.setDirection( 40 )
+		time.sleep( 1.0 )
+	        self._robot.setSpeed( 0 )
+        	self._robot.setDirection( 0 )
+	else:
+		print "- button up - doing nothing"
+
+    def _doCircleLeft( self, event ):
+        print "Button %d %s - doing circle right"%(event.button, "up" if event.type == pygame.JOYBUTTONUP else "down")
+	if event.type == pygame.JOYBUTTONDOWN:
+	        self._robot.setSpeed( 0 )
+        	self._robot.setDirection( -40 )
+		time.sleep( 1.0 )
+	        self._robot.setSpeed( 0 )
+        	self._robot.setDirection( 0 )
+	else:
+		print "- button up - doing nothing"
 
     def _handleButtons( self, event ):
         self._buttonHandlers[event.button](event)
